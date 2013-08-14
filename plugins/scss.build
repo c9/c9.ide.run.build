@@ -1,0 +1,5 @@
+{
+    "caption" : "SASS (scss)",
+    "cmd": ["sass", "--scss", "--update", "$file:${file/\\.scss/\\.css/}"],
+    "selector": "source.scss"
+}

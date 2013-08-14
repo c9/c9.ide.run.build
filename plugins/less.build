@@ -1,0 +1,5 @@
+{
+    "caption" : "LESS",
+    "cmd": ["lessc", "$file", ">", "${file/\\.less/\\.css/}"],
+    "selector": "source.less"
+}
