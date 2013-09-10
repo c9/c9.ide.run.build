@@ -57,7 +57,7 @@ define(function(require, module, exports) {
             }, plugin);
 
             // Check after state.change
-            c9.on("state.change", function(e){
+            c9.on("stateChange", function(e){
                 
             }, plugin);
             
