@@ -211,7 +211,7 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
                             if (err) throw err.message;
                         });
                         
-                        save.emit("after.save", {path: "/helloworld.coffee"});
+                        save.emit("afterSave", {path: "/helloworld.coffee"});
                         
                         build.on("stopped", function c1(e){
                             var process = e.process;

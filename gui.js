@@ -160,7 +160,7 @@ define(function(require, module, exports) {
             }), c += 100, plugin);
             
             // Hook into FS and build file when writeFile is triggered
-            save.on("after.save", function(e){
+            save.on("afterSave", function(e){
                 var ext = fs.getExtension(e.path);
                 if (!ext)
                     return;
