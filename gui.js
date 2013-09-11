@@ -194,26 +194,26 @@ define(function(require, module, exports) {
         }
         
         function getFocusPage(){
-            var page = tabs.focussedPage;
-            if (!page) return false;
-            if (page.path) return page;
-            if (page.editor.type != "output") return false;
+            var tab = tabs.focussedPage;
+            if (!tab) return false;
+            if (tab.path) return tab;
+            if (tab.editor.type != "output") return false;
             
-            var splits = page.pane.aml
+            var splits = tab.pane.aml
                 .parentNode.parentNode.getElementsByTagName("pane");
             if (splits.length > 1) {
-                var idx = splits[0].cloud9pane == page.pane ? 1 : 0;
-                page = splits[idx].cloud9pane.getPage();
-                return page;
+                var idx = splits[0].cloud9pane == tab.pane ? 1 : 0;
+                tab = splits[idx].cloud9pane.getPage();
+                return tab;
             }
             return false;
         }
         
         function buildFocusPage(onlyBuild, path){
             if (!path) {
-                var page = getFocusPage();
-                if (!page) return;
-                path = page.path;
+                var tab = getFocusPage();
+                if (!tab) return;
+                path = tab.path;
             }
             
             if (!onlyBuild)
