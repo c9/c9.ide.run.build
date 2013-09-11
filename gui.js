@@ -199,11 +199,11 @@ define(function(require, module, exports) {
             if (page.path) return page;
             if (page.editor.type != "output") return false;
             
-            var splits = page.tab.aml
-                .parentNode.parentNode.getElementsByTagName("tab");
+            var splits = page.pane.aml
+                .parentNode.parentNode.getElementsByTagName("pane");
             if (splits.length > 1) {
-                var idx = splits[0].cloud9tab == page.tab ? 1 : 0;
-                page = splits[idx].cloud9tab.getPage();
+                var idx = splits[0].cloud9pane == page.pane ? 1 : 0;
+                page = splits[idx].cloud9pane.getPage();
                 return page;
             }
             return false;
