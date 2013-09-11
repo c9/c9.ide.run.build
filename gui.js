@@ -44,10 +44,10 @@ define(function(require, module, exports) {
                 hint    : "builds the current file (focussed document)",
                 bindKey : { mac: "Command-B", win: "Ctrl-B" },
                 isAvailable : function(){
-                    return getFocusPage() ? true : false;
+                    return getFocusTab() ? true : false;
                 },
                 exec : function(){
-                    buildFocusPage();
+                    buildFocusTab();
                 }
             }, plugin);
     
@@ -174,7 +174,7 @@ define(function(require, module, exports) {
                 else if (currentBuilder.selector != "source." + ext)
                     return;
                 
-                buildFocusPage(true, e.path);
+                buildFocusTab(true, e.path);
             });
         };
         
@@ -193,8 +193,8 @@ define(function(require, module, exports) {
             }
         }
         
-        function getFocusPage(){
-            var tab = tabs.focussedPage;
+        function getFocusTab(){
+            var tab = tabs.focussedTab;
             if (!tab) return false;
             if (tab.path) return tab;
             if (tab.editor.type != "output") return false;
@@ -209,9 +209,9 @@ define(function(require, module, exports) {
             return false;
         }
         
-        function buildFocusPage(onlyBuild, path){
+        function buildFocusTab(onlyBuild, path){
             if (!path) {
-                var tab = getFocusPage();
+                var tab = getFocusTab();
                 if (!tab) return;
                 path = tab.path;
             }

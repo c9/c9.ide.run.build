@@ -323,7 +323,7 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
                                             expect(exists, "JS file generated").to.ok;
                                             
                                             setTimeout(function(){
-                                                expect.html(tabs.focussedPage, "Output Mismatch")
+                                                expect.html(tabs.focussedTab, "Output Mismatch")
                                                     .text(/Hello\sCoffee/);
                                                 
                                                 fs.rmfile("/helloworld.coffee", function(){
