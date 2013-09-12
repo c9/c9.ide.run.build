@@ -7,7 +7,7 @@
 define(function(require, module, exports) {
     main.consumes = [
         "c9", "plugin", "build", "settings", "commands", "fs", "save",
-        "menus", "tabs", "ui", "layout"
+        "menus", "tabManager", "ui", "layout"
     ];
     main.provides = ["buildgui"];
     return main;
@@ -22,7 +22,7 @@ define(function(require, module, exports) {
         var c9          = imports.c9;
         var fs          = imports.fs;
         var ui          = imports.ui;
-        var tabs        = imports.tabs;
+        var tabs        = imports.tabManager;
         var layout      = imports.layout;
         
         /***** Initialization *****/

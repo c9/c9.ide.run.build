@@ -51,7 +51,7 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
         "plugins/c9.ide.editors/editors",
         "plugins/c9.ide.editors/editor",
         {
-            packagePath : "plugins/c9.ide.editors/tabs",
+            packagePath : "plugins/c9.ide.editors/tabmanager",
             testing     : 2
         },
         "plugins/c9.ide.editors/pane",
@@ -144,7 +144,7 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
             setup    : expect.html.mocked
         },
         {
-            consumes : ["build", "run", "fs", "tabs", "console", "output"],
+            consumes : ["build", "run", "fs", "tabManager", "console", "output"],
             provides : [],
             setup    : main
         }
@@ -158,7 +158,7 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
         var run      = imports.run;
         var build    = imports.build;
         var fs       = imports.fs;
-        var tabs     = imports.tabs;
+        var tabs     = imports.tabManager;
         var cnsl     = imports.console;
         
         expect.html.setConstructor(function(tab){
