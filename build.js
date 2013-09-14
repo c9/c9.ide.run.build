@@ -5,12 +5,12 @@
  * @license GPLv3 <http://www.gnu.org/licenses/gpl.txt>
  */
 define(function(require, module, exports) {
-    main.consumes = ["plugin", "settings", "fs", "c9", "preferences", "run"];
+    main.consumes = ["Plugin", "settings", "fs", "c9", "preferences", "run"];
     main.provides = ["build"];
     return main;
 
     function main(options, imports, register) {
-        var Plugin      = imports.plugin;
+        var Plugin      = imports.Plugin;
         var settings    = imports.settings;
         var prefs       = imports.preferences;
         var run         = imports.run;

@@ -6,14 +6,14 @@
  */
 define(function(require, module, exports) {
     main.consumes = [
-        "c9", "plugin", "build", "settings", "commands", "fs", "save",
+        "c9", "Plugin", "build", "settings", "commands", "fs", "save",
         "menus", "tabManager", "ui", "layout"
     ];
     main.provides = ["buildgui"];
     return main;
 
     function main(options, imports, register) {
-        var Plugin      = imports.plugin;
+        var Plugin      = imports.Plugin;
         var settings    = imports.settings;
         var commands    = imports.commands;
         var menus       = imports.menus;
