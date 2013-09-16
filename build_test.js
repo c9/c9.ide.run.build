@@ -138,7 +138,7 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
             consumes : ["emitter", "apf", "ui"],
             provides : [
                 "commands", "menus", "layout", "watcher", 
-                "save", "fs", "preferences", "clipboard"
+                "save", "preferences", "clipboard"
             ],
             setup    : expect.html.mocked
         },
