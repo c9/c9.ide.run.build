@@ -200,7 +200,7 @@ define(function(require, module, exports) {
             if (tab.editor.type != "output") return false;
             
             var splits = tab.pane.aml
-                .parentNode.parentNode.getElementsByTagName("pane");
+                .parentNode.parentNode.getElementsByTagName("tab");
             if (splits.length > 1) {
                 var idx = splits[0].cloud9pane == tab.pane ? 1 : 0;
                 tab = splits[idx].cloud9pane.getPage();
