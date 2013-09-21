@@ -6,14 +6,14 @@
  */
 define(function(require, module, exports) {
     main.consumes = [
-        "c9", "plugin", "build", "settings", "commands", "fs", "save",
-        "menus", "tabs", "ui", "layout"
+        "c9", "Plugin", "build", "settings", "commands", "fs", "save",
+        "menus", "tabManager", "ui", "layout"
     ];
     main.provides = ["buildgui"];
     return main;
 
     function main(options, imports, register) {
-        var Plugin      = imports.plugin;
+        var Plugin      = imports.Plugin;
         var settings    = imports.settings;
         var commands    = imports.commands;
         var menus       = imports.menus;
@@ -22,7 +22,7 @@ define(function(require, module, exports) {
         var c9          = imports.c9;
         var fs          = imports.fs;
         var ui          = imports.ui;
-        var tabs        = imports.tabs;
+        var tabs        = imports.tabManager;
         var layout      = imports.layout;
         
         /***** Initialization *****/
@@ -44,10 +44,10 @@ define(function(require, module, exports) {
                 hint    : "builds the current file (focussed document)",
                 bindKey : { mac: "Command-B", win: "Ctrl-B" },
                 isAvailable : function(){
-                    return getFocusPage() ? true : false;
+                    return getFocusTab() ? true : false;
                 },
                 exec : function(){
-                    buildFocusPage();
+                    buildFocusTab();
                 }
             }, plugin);
     
@@ -160,7 +160,7 @@ define(function(require, module, exports) {
             }), c += 100, plugin);
             
             // Hook into FS and build file when writeFile is triggered
-            save.on("after.save", function(e){
+            save.on("afterSave", function(e){
                 var ext = fs.getExtension(e.path);
                 if (!ext)
                     return;
@@ -174,7 +174,7 @@ define(function(require, module, exports) {
                 else if (currentBuilder.selector != "source." + ext)
                     return;
                 
-                buildFocusPage(true, e.path);
+                buildFocusTab(true, e.path);
             });
         };
         
@@ -193,27 +193,27 @@ define(function(require, module, exports) {
             }
         }
         
-        function getFocusPage(){
-            var page = tabs.focussedPage;
-            if (!page) return false;
-            if (page.path) return page;
-            if (page.editor.type != "output") return false;
+        function getFocusTab(){
+            var tab = tabs.focussedTab;
+            if (!tab) return false;
+            if (tab.path) return tab;
+            if (tab.editor.type != "output") return false;
             
-            var splits = page.tab.aml
-                .parentNode.parentNode.getElementsByTagName("tab");
+            var splits = tab.pane.aml
+                .parentNode.parentNode.getElementsByTagName("pane");
             if (splits.length > 1) {
-                var idx = splits[0].cloud9tab == page.tab ? 1 : 0;
-                page = splits[idx].cloud9tab.getPage();
-                return page;
+                var idx = splits[0].cloud9pane == tab.pane ? 1 : 0;
+                tab = splits[idx].cloud9pane.getPage();
+                return tab;
             }
             return false;
         }
         
-        function buildFocusPage(onlyBuild, path){
+        function buildFocusTab(onlyBuild, path){
             if (!path) {
-                var page = getFocusPage();
-                if (!page) return;
-                path = page.path;
+                var tab = getFocusTab();
+                if (!tab) return;
+                path = tab.path;
             }
             
             if (!onlyBuild)

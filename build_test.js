@@ -24,10 +24,10 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
         {
             packagePath : "plugins/c9.core/settings",
             settings : "<settings><state><console>" + JSON.stringify({
-                type  : "tab", 
+                type  : "pane", 
                 nodes : [
                     {
-                        type : "page",
+                        type : "tab",
                         editorType : "output",
                         active : "true",
                         document : {
@@ -49,11 +49,11 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
         "plugins/c9.ide.editors/editors",
         "plugins/c9.ide.editors/editor",
         {
-            packagePath : "plugins/c9.ide.editors/tabs",
+            packagePath : "plugins/c9.ide.editors/tabmanager",
             testing     : 2
         },
+        "plugins/c9.ide.editors/pane",
         "plugins/c9.ide.editors/tab",
-        "plugins/c9.ide.editors/page",
         "plugins/c9.ide.terminal/terminal",
         "plugins/c9.ide.run/output",
         "plugins/c9.ide.console/console",
@@ -143,7 +143,7 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
             setup    : expect.html.mocked
         },
         {
-            consumes : ["build", "run", "fs", "tabs", "console", "output"],
+            consumes : ["build", "run", "fs", "tabManager", "console", "output"],
             provides : [],
             setup    : main
         }
@@ -157,12 +157,12 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
         var run      = imports.run;
         var build    = imports.build;
         var fs       = imports.fs;
-        var tabs     = imports.tabs;
+        var tabs     = imports.tabManager;
         var cnsl     = imports.console;
         
-        expect.html.setConstructor(function(page){
-            if (typeof page == "object")
-                return page.tab.aml.getPage("editor::" + page.editorType).$ext;
+        expect.html.setConstructor(function(tab){
+            if (typeof tab == "object")
+                return tab.pane.aml.getPage("editor::" + tab.editorType).$ext;
         });
         
         function countEvents(count, expected, done){
@@ -322,7 +322,7 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
                                             expect(exists, "JS file generated").to.ok;
                                             
                                             setTimeout(function(){
-                                                expect.html(tabs.focussedPage, "Output Mismatch")
+                                                expect.html(tabs.focussedTab, "Output Mismatch")
                                                     .text(/Hello\sCoffee/);
                                                 
                                                 fs.rmfile("/helloworld.coffee", function(){
