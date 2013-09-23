@@ -1,15 +1,9 @@
-/**
- * Node Runner Module for the Cloud9 IDE
- *
- * @copyright 2010, Ajax.org B.V.
- * @license GPLv3 <http://www.gnu.org/licenses/gpl.txt>
- */
 define(function(require, module, exports) {
     main.consumes = [
-        "c9", "Plugin", "build", "settings", "commands", "fs", "save",
+        "Plugin", "build", "settings", "commands", "fs", "save",
         "menus", "tabManager", "ui", "layout"
     ];
-    main.provides = ["buildgui"];
+    main.provides = ["build.gui"];
     return main;
 
     function main(options, imports, register) {
@@ -19,7 +13,6 @@ define(function(require, module, exports) {
         var menus       = imports.menus;
         var save         = imports.save;
         var build       = imports.build;
-        var c9          = imports.c9;
         var fs          = imports.fs;
         var ui          = imports.ui;
         var tabs        = imports.tabManager;
@@ -251,14 +244,23 @@ define(function(require, module, exports) {
         /***** Register and define API *****/
         
         /**
-         * UI for the Build System
+         * UI for the {@link build} plugin. This plugin is responsible for the Run
+         * menu in the main menu bar, as well as the settings and the 
+         * preferences UI for the run plugin.
+         * @singleton
+         */
+        /**
+         * @command build Builds the currently focussed tab.
+         */
+        /**
+         * @command stopbuild Stops the running build.
          */
         plugin.freezePublicAPI({
             
         });
         
         register(null, {
-            "buildgui": plugin
+            "build.gui": plugin
         });
     }
 });

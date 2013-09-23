@@ -1,9 +1,3 @@
-/**
- * Builds code
- *
- * @copyright 2010, Ajax.org B.V.
- * @license GPLv3 <http://www.gnu.org/licenses/gpl.txt>
- */
 define(function(require, module, exports) {
     main.consumes = ["Plugin", "settings", "fs", "c9", "preferences", "run"];
     main.provides = ["build"];
@@ -170,12 +164,6 @@ define(function(require, module, exports) {
             return proc;
         }
         
-//        function stopAll(){
-//            processes.forEach(function(proc){
-//                proc.stop();
-//            })
-//        }
-        
         /***** Lifecycle *****/
         
         plugin.on("load", function(){
@@ -194,38 +182,159 @@ define(function(require, module, exports) {
         /***** Register and define API *****/
         
         /**
-         * Runs arbitrary programs and code within Cloud9 IDE. This plugin
-         * depends on the `run` plugin. 
+         * Builds arbitrary code from within Cloud9 IDE based on a builder. 
          * 
-         * @property processes {Array} List of builder processes
+         * *NB.: The build plugin works almost identical to the run plugin. The
+         * builder format is a subset of the runner format. The major difference
+         * is that builders are used to build code into executables or 
+         * deployables and that the runner is used to run executable.*
          * 
-         * @property STOPPING {-1} to be tested against the `running` property. Indicates the process is being killed.
-         * @property STOPPED  {0} to be tested against the `running` property. Indicates the process is not running.
-         * @property STARTING {1} to be tested against the `running` property. Indicates the process is getting started.
-         * @property STARTED  {2} to be tested against the `running` property. Indicates the process is running.
+         * Example:
          * 
-         * @event stopping Fires when the process is going to be killed
-         * @param {Object} e
-         *   process {Process} the process that is stopping
-         * @event stopped Fires when the process stopped running
-         * @param {Object} e
-         *   process {Process} the process that is stopped
-         * @event starting Fires when the process is being started
-         * @param {Object} e
-         *   process {Process} the process that is starting
-         * @event started Fires when the process is started. This event also fires during startup if there's a PID file present
-         * @param {Object} e
-         *   process {Process} the process that is stopped
+         *     build.getBuilder("coffee", false, function(err, builder){
+         *         if (err) throw err.message;
+         *         
+         *         var process = build.build(builder, {
+         *             path: "/helloworld.coffee"
+         *         }, function(err, pid){
+         *             if (err) throw err.message;
+         * 
+         *             console.log("The PID is ", pid);
+         *         });
+         *     });
+         * 
+         * You can also ask for auto-detection of the builder based on the file
+         * extension:
+         * 
+         *     var process = build.build("auto", {
+         *         path: "/helloworld.coffee"
+         *     }, function(err, pid){
+         *         if (err) throw err.message;
+         *     
+         *         console.log("The PID is ", pid);
+         *     });
+         * 
+         * A builder is a simple struct that describes how to build a 
+         * certain subset of files. For instance a builder describing how to run 
+         * Coffeescript files looks like this:
+         * 
+         *     {
+         *         "caption" : "Coffee",
+         *         "cmd": [coffee, "-c", "$file"],
+         *         "selector": "source.coffee"
+         *     }
+         * 
+         * The concept of builders is based on the
+         * [Sublime Text(tm) Build Systems](http://docs.sublimetext.info/en/sublime-text-3/file_processing/build_systems.html),
+         * and is compatible with that format. There are a several
+         * build-in builders, and external plugins can add new builders as well.
+         * Users can also add builders to their .c9/builders directory in
+         * the workspace. We recommend users to commit these builders to their
+         * repository.
+         * 
+         * The {@link run run plugin} also uses a compatible
+         * format for the cloud9 runners.
+         * 
+         * It is possible to combine builders and runners, therefore it is
+         * often not needed to describe the build and run step in the same
+         * definition.
+         * 
+         * A process is always started in a [TMUX](http://en.wikipedia.org/wiki/Tmux) 
+         * session. TMUX is a PTY multi-plexer which has several advantages; 
+         * multiple clients can connect to the same session and the sessions are 
+         * kept even if no user is connected. 
+         * 
+         * You can connect an {@link output} pane to the started process to
+         * see the output of your running process. The name passed to
+         * {@link build#build} should be the same as the name of the output pane
+         * you open:
+         * 
+         *     tabManager.open({
+         *         editorType : "output", 
+         *         active     : true,
+         *         document   : {
+         *             title  : "My Process Name",
+         *             output : {
+         *                 id : "name_of_process"
+         *             }
+         *         }
+         *     }, function(){});
+         * 
+         * Note that by default the process name is "output" and is shown in the
+         * default output panel (available via the View menu).
+         * 
+         * @singleton
          */
         plugin.freezePublicAPI({
+            /**
+             * Indicates the process is being killed. To be tested against 
+             * the `running` property.
+             * @property {-1} STOPPING
+             */
             STOPPING : run.STOPPING,
+            /**
+             * Indicates the process is not running. To be tested against 
+             * the `running` property.
+             * @property {0}  STOPPED 
+             */
             STOPPED  : run.STOPPED,
+            /**
+             * Indicates the process is getting started. To be tested against 
+             * the `running` property.
+             * @property {1}  STARTING
+             */
             STARTING : run.STARTING,
+            /**
+             * Indicates the process is running. To be tested against 
+             * the `running` property.
+             * @property {2}  STARTED 
+             */
             STARTED  : run.STARTED,
             
+            /**
+             * @property {run.Process[]}  processes  List of running processes
+             */
             get processes(){ return processes; },
+            /**
+             * @property {Object[]}  builders  List of available builders
+             */
             get builders(){ return builders; },
+            /**
+             * @ignore
+             */
             get base(){ return base; },
+            
+            _events : [
+                /**
+                 * Fires when the process is going to be killed
+                 * @event stopping
+                 * @param {Object} e
+                 * @param {run.Process} e.process the process that is stopping
+                 */
+                "stopping",
+                /**
+                 * Fires when the process stopped running
+                 * @event stopped 
+                 * @param {Object} e
+                 * @param {run.Process} e.process the process that is stopped
+                 */
+                "stopped",
+                /**
+                 * Fires when the process is being started
+                 * @event starting 
+                 * @param {Object} e
+                 * @param {run.Process} e.process the process that is starting
+                 */
+                "starting",
+                /**
+                 * Fires when the process is started. This event also fires 
+                 * during startup if there's a PID file present
+                 * @event started 
+                 * @param {Object} e
+                 * @param {run.Process} e.process the process that is stopped
+                 */
+                "started"
+            ],
             
             /**
              * Retrieves an array of names of builders available to the system.
@@ -234,33 +343,32 @@ define(function(require, module, exports) {
              * the sublime build scripts. Besides the build in builders, the
              * user can store builders in ~/.c9/builders. This list will contain
              * both the user's builders as well as the build-in builders.
-             * @param callback(err, builders) {Function} called when the builders are retrieved
+             * @param {Function} callback           Called when the builders are retrieved
+             * @param {Error}    callback.err       The error object if an error occurred.
+             * @param {String[]} callback.builders  A list of names of builders.
              */
             listBuilders : listBuilders,
             
             /**
              * Retrieves an individual builder's JSON object based on it's name.
              * The names of available builders can be retrieved using `listBuilders`.
-             * @param callback(err, builder) {Function} called when the builder is retrieved
+             * @param {Function} callback         Called when the runner is retrieved
+             * @param {Function} callback.err     The error object if an error occurred.
+             * @param {Function} callback.runner  A builder object. See {@link run#run} for more information.
              */
             getBuilder : getBuilder,
             
             /**
-             * Stop all running processes
-             */
-            //stopAll : stopAll,
-            
-            /**
              * Builds a file. See `run.run()` for the full documentation
-             * @param builder {Object, "auto"} Object describing how to build a process. 
-             * @param {Object} 
-             options * @param {Object} e
-             *   path  {String} the path to the file to execute
-             *   cwd   {String} the current working directory
-             *   debug {Boolean} whether to start the process in debug mode
-             * @param {String} name   the unique name of the output buffer. Defaults to "output". 
-             * @param {Function} callback called when the process is started
-             * @returns process {Process} the process object
+             * @param {Object/"auto"} builder   Object describing how to build a process. 
+             * @param {Object}        options 
+             * @param {String}        options.path        The path to the file to build
+             * @param {String}        [options.cwd]       The current working directory
+             * @param {Boolean}       [options.debug]     Specifies whether to start the process in debug mode
+             * @param {String}        [name]              The unique name of the output buffer. Defaults to "output". 
+             * @param {Function}      callback            Called when the process is started
+             * @param {Error}         callback.err        The error object if an error occurred.
+             * @returns {run.Process} the process object
              */
             build : build
         });
