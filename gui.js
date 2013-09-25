@@ -196,7 +196,7 @@ define(function(require, module, exports) {
                 .parentNode.parentNode.getElementsByTagName("tab");
             if (splits.length > 1) {
                 var idx = splits[0].cloud9pane == tab.pane ? 1 : 0;
-                tab = splits[idx].cloud9pane.getPage();
+                tab = splits[idx].cloud9pane.getTab();
                 return tab;
             }
             return false;
