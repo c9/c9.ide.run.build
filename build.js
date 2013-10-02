@@ -187,7 +187,7 @@ define(function(require, module, exports) {
          * *NB.: The build plugin works almost identical to the run plugin. The
          * builder format is a subset of the runner format. The major difference
          * is that builders are used to build code into executables or 
-         * deployables and that the runner is used to run executable.*
+         * deployables and that the runner is used to run executables.*
          * 
          * Example:
          * 
@@ -227,7 +227,7 @@ define(function(require, module, exports) {
          * The concept of builders is based on the
          * [Sublime Text(tm) Build Systems](http://docs.sublimetext.info/en/sublime-text-3/file_processing/build_systems.html),
          * and is compatible with that format. There are a several
-         * build-in builders, and external plugins can add new builders as well.
+         * built-in builders, and external plugins can add new builders as well.
          * Users can also add builders to their .c9/builders directory in
          * the workspace. We recommend users to commit these builders to their
          * repository.
@@ -328,10 +328,10 @@ define(function(require, module, exports) {
                 "starting",
                 /**
                  * Fires when the process is started. This event also fires 
-                 * during startup if there's a PID file present
+                 * during startup if there's a PID file present.
                  * @event started 
                  * @param {Object} e
-                 * @param {run.Process} e.process the process that is stopped
+                 * @param {run.Process} e.process the process that is started
                  */
                 "started"
             ],
