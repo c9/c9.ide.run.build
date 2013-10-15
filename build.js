@@ -41,6 +41,7 @@ define(function(require, module, exports) {
             prefs.add({
                 "Project" : {
                     "Build" : {
+                        position : 400,
                         "Builder Path in Workspace" : {
                            type : "textbox",
                            path : "project/build/@path",
