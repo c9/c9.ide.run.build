@@ -88,8 +88,6 @@ define(function(require, module, exports) {
         }
         
         function detectBuilder(options, callback){
-            var ext = fs.getExtension(options.path);
-            
             listBuilders(function(err, names){
                 if (err) return callback(err);
                 
@@ -109,7 +107,7 @@ define(function(require, module, exports) {
             function done(){
                 for (var name in builders) {
                     var builder = builders[name];
-                    if (builder.selector == "source." + ext)
+                    if (run.matchSelector(builder.selector, options.path))
                         return callback(null, builder);
                 }
                 
