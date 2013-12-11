@@ -31,6 +31,17 @@ define(function(require, module, exports) {
                 settings.setDefaults("project/build", [
                     ["path", "~/.c9/builders"]
                 ]);
+                
+                // @todo Could consider adding a watcher to ~/.c9/runners
+                listBuilders(function(err, files){
+                    files.forEach(function(file){
+                        if (!builders[file]) {
+                            getBuilder(file, false, function(err, builder){
+                                builders[file] = builder;
+                            });
+                        }
+                    });
+                });
             }, plugin);
             
             settings.on("write", function(e){
@@ -55,18 +66,6 @@ define(function(require, module, exports) {
             c9.on("stateChange", function(e){
                 
             }, plugin);
-            
-            // @todo Could consider adding a watcher to ~/.c9/runners
-            
-            listBuilders(function(err, files){
-                files.forEach(function(file){
-                    if (!builders[file]) {
-                        getBuilder(file, false, function(err, builder){
-                            builders[file] = builder;
-                        });
-                    }
-                })
-            })
         }
         
         /***** Methods *****/
