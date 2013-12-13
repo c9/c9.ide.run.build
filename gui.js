@@ -134,7 +134,9 @@ define(function(require, module, exports) {
                 command : "stopbuild"
             }), c += 100, plugin);
             menus.addItemByPath("Run/Show Build Result", new ui.item({
-                command: "showoutput"
+                onclick: function(){
+                    commands.exec("showoutput", null, { id: "build" });
+                }
             }), c += 100, plugin);
             menus.addItemByPath("Run/Save All on Build", new ui.item({
                 type  : "check",
@@ -210,7 +212,7 @@ define(function(require, module, exports) {
             }
             
             if (!onlyBuild)
-                commands.exec("showoutput");
+                commands.exec("showoutput", null, { id: "build" });
             
             if (settings.get("project/build/@saveall"))
                 save.saveAll(done);
@@ -219,7 +221,7 @@ define(function(require, module, exports) {
             
             function done(){
                 process = build.build(currentBuilder, 
-                    { path: path }, "output", function(err, pid){
+                    { path: path }, "build", function(err, pid){
                         if (err && err.code != "EBUILDERNOTFOUND")
                             return layout.showError(err);
                     });

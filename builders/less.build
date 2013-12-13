@@ -1,5 +1,5 @@
 {
     "caption" : "LESS",
-    "cmd": ["lessc", "$file", "${file/\\.less/\\.css/}"],
+    "cmd": ["lessc", "$file", "${file/\\.less/.css/}", "; echo; echo 'Built $file > ${file/\\.less/.css/}.'"],
     "selector": "source.less"
 }

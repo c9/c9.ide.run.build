@@ -54,8 +54,8 @@ define(function(require, module, exports) {
                     "Build" : {
                         position : 400,
                         "Builder Path in Workspace" : {
-                           type : "textbox",
-                           path : "project/build/@path",
+                           type     : "textbox",
+                           path     : "project/build/@path",
                            position : 1000
                         }
                     }
