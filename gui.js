@@ -11,12 +11,13 @@ define(function(require, module, exports) {
         var settings    = imports.settings;
         var commands    = imports.commands;
         var menus       = imports.menus;
-        var save         = imports.save;
+        var save        = imports.save;
         var build       = imports.build;
         var fs          = imports.fs;
         var ui          = imports.ui;
         var tabs        = imports.tabManager;
         var layout      = imports.layout;
+        var uCaseFirst  = require("c9/string").uCaseFirst;
         
         /***** Initialization *****/
         
@@ -89,7 +90,7 @@ define(function(require, module, exports) {
                             names.forEach(function(name){
                                 menus.addItemToMenu(mnuBuildSystem, new ui.item({
                                     type     : "radio",
-                                    caption  : name.uCaseFirst(),
+                                    caption  : uCaseFirst(name),
                                     value    : name,
                                     selected : builder == name
                                 }), c++, plugin);
