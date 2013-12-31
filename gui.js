@@ -64,6 +64,9 @@ define(function(require, module, exports) {
                     ["saveall", "true"],
                     ["builder", "auto"]
                 ]);
+                settings.setDefaults("user/build", [
+                    ["autobuild", "true"]
+                ]);
                 
                 var name = settings.get("project/build/@builder");
                 setCurrentBuilder(name, function(){});
@@ -139,6 +142,10 @@ define(function(require, module, exports) {
                     commands.exec("showoutput", null, { id: "build" });
                 }
             }), c += 100, plugin);
+            menus.addItemByPath("Run/Automatically Build Supported Files", new ui.item({
+                type  : "check",
+                value : "[{settings.model}::user/build/@autobuild]"
+            }), c += 100, plugin);
             menus.addItemByPath("Run/Save All on Build", new ui.item({
                 type  : "check",
                 value : "[{settings.model}::project/build/@saveall]"
@@ -157,6 +164,9 @@ define(function(require, module, exports) {
             
             // Hook into FS and build file when writeFile is triggered
             save.on("afterSave", function(e){
+                if (!settings.getBool("user/build/@autobuild"))
+                    return;
+                
                 var ext = fs.getExtension(e.path);
                 if (!ext)
                     return;

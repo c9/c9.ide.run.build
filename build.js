@@ -61,6 +61,19 @@ define(function(require, module, exports) {
                     }
                 }
             }, plugin);
+            
+            prefs.add({
+                "Run" : {
+                    "Build" : {
+                        position : 400,
+                        "Automatically Build Supported Files" : {
+                           type     : "checkbox",
+                           path     : "user/build/@autobuild",
+                           position : 100
+                        }
+                    }
+                }
+            }, plugin);
 
             // Check after state.change
             c9.on("stateChange", function(e){
