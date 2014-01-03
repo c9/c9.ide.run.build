@@ -156,10 +156,11 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
         var tabs     = imports.tabManager;
         var cnsl     = imports.console;
         
-        expect.html.setConstructor(function(tab){
+        function getHtmlElement(tab){
             if (typeof tab == "object")
                 return tab.pane.aml.getPage("editor::" + tab.editorType).$ext;
-        });
+        }
+        expect.html.setConstructor(getHtmlElement);
         
         function countEvents(count, expected, done){
             if (count == expected) 
@@ -167,6 +168,21 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
             else
                 throw new Error("Wrong Event Count: "
                     + count + " of " + expected);
+        }
+        
+        var maxTries = 15, retries = 0;
+        function waitForOutput(match, callback){
+            setTimeout(function(){
+                if (retries < maxTries && !getHtmlElement(tabs.focussedTab).textContent.match(match)) {
+                    retries++;
+                    return waitForOutput(match, callback);
+                }
+                    
+                expect.html(tabs.focussedTab, "Output Mismatch")
+                    .text(match);
+                
+                callback();
+            }, 500);
         }
         
         describe('build', function() {
@@ -317,16 +333,13 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
                                         fs.exists("/helloworld.js", function(exists){
                                             expect(exists, "JS file generated").to.ok;
                                             
-                                            setTimeout(function(){
-                                                expect.html(tabs.focussedTab, "Output Mismatch")
-                                                    .text(/Hello\sCoffee/);
-                                                
+                                            waitForOutput(/Hello\sCoffee/, function(){
                                                 fs.rmfile("/helloworld.coffee", function(){
                                                     fs.rmfile("/helloworld.js", function(){
                                                         countEvents(count, 3, done);
                                                     });
                                                 });
-                                            }, 1000);
+                                            });
                                         });
                                     });
                                     
