@@ -1,7 +1,7 @@
 define(function(require, module, exports) {
     main.consumes = [
         "Plugin", "build", "settings", "commands", "fs", "save",
-        "menus", "tabManager", "ui", "layout"
+        "menus", "tabManager", "ui", "dialog.error"
     ];
     main.provides = ["build.gui"];
     return main;
@@ -16,7 +16,7 @@ define(function(require, module, exports) {
         var fs          = imports.fs;
         var ui          = imports.ui;
         var tabs        = imports.tabManager;
-        var layout      = imports.layout;
+        var showError   = imports["dialog.error"].show;
         var uCaseFirst  = require("c9/string").uCaseFirst;
         
         /***** Initialization *****/
@@ -234,7 +234,7 @@ define(function(require, module, exports) {
                 process = build.build(currentBuilder, 
                     { path: path }, "build", function(err, pid){
                         if (err && err.code != "EBUILDERNOTFOUND")
-                            return layout.showError(err);
+                            return showError(err);
                     });
             }
         }
