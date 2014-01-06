@@ -107,7 +107,9 @@ define(function(require, module, exports) {
                             path   : settings.get("project/build/@path") 
                               + "/New Build System",
                             active : true,
-                            value  : '{\n'
+                            value  : '// Create a custom Cloud9 build system - similar to the Sublime build system\n'
+                              + '// For more information see http://docs.c9.io:8080/#!/api/run-method-run\n'
+                              + '{\n'
                               + '    "caption" : "",\n'
                               + '    "cmd" : ["ls"],\n'
                               + '    "selector": "source.ext"\n'
