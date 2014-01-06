@@ -119,7 +119,7 @@ define(function(require, module, exports) {
                                     newfile: true
                                 },
                                 ace : {
-                                    customType : "json"
+                                    customSyntax : "json"
                                 }
                             }
                         }, function(){});
