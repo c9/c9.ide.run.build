@@ -16,9 +16,10 @@ define(function(require, module, exports) {
         var plugin  = new Plugin("Ajax.org", main.consumes);
         var emit    = plugin.getEmitter();
         
-        var builders   = options.builders;
-        var processes  = [];
-        var base       = options.base;
+        var builders    = options.builders;
+        var processes   = [];
+        var base        = options.base;
+        var builderPath = options.builderPath || "/.c9/builders"
         
         var loaded = false;
         function load(){
@@ -29,7 +30,7 @@ define(function(require, module, exports) {
             settings.on("read", function(e){
                 // Defaults
                 settings.setDefaults("project/build", [
-                    ["path", "~/.c9/builders"]
+                    ["path", builderPath]
                 ]);
                 
                 // @todo Could consider adding a watcher to ~/.c9/runners
@@ -37,7 +38,8 @@ define(function(require, module, exports) {
                     files.forEach(function(file){
                         if (!builders[file]) {
                             getBuilder(file, false, function(err, builder){
-                                builders[file] = builder;
+                                if (!err)
+                                    builders[file] = builder;
                             });
                         }
                     });
@@ -137,6 +139,9 @@ define(function(require, module, exports) {
                   + "/" + name, "utf8", function(err, data){
                     if (err)
                         return callback(err);
+                    
+                    // Remove comments
+                    data = data.replace(/\/\/.*/g, "");
                     
                     var builder;
                     try{ builder = JSON.parse(data); }
