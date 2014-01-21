@@ -111,7 +111,8 @@ define(function(require, module, exports) {
                               + '// For more information see http://docs.c9.io:8080/#!/api/run-method-run\n'
                               + '{\n'
                               + '    "caption" : "",\n'
-                              + '    "cmd" : ["ls"],\n'
+                              + '    "cmd" : ["ls", "$file", "$args"],\n'
+                              + '    "info" : "Building $project_path/$file",\n'
                               + '    "selector": "source.ext"\n'
                               + '}',
                             document : {
