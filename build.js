@@ -198,7 +198,7 @@ define(function(require, module, exports) {
         /***** Register and define API *****/
         
         /**
-         * Builds arbitrary code from within Cloud9 IDE based on a builder. 
+         * Builds arbitrary code from within Cloud9 based on a builder. 
          * 
          * *NB.: The build plugin works almost identical to the run plugin. The
          * builder format is a subset of the runner format. The major difference
