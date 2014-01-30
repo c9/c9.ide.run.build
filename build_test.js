@@ -231,7 +231,7 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
             describe("build()", function(){
                 this.timeout(10000);
                 
-                it.only('should build a file with a builder', function(done) {
+                it('should build a file with a builder', function(done) {
                     var foundPid, count = 0;
                     
                     build.getBuilder("coffee", false, function(err, builder){
