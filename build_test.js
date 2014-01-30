@@ -63,7 +63,10 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
         "plugins/c9.ide.console/console",
         "plugins/c9.fs/proc",
         "plugins/c9.fs/fs",
-        "plugins/c9.vfs.client/vfs_client",
+        {
+            packagePath: "plugins/c9.vfs.client/vfs_client",
+            debug: true
+        },
         "plugins/c9.vfs.client/endpoint",
         "plugins/c9.ide.auth/auth",
         {
@@ -139,7 +142,8 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
             provides : [
                 "commands", "menus", "layout", "watcher", "save", 
                 "preferences", "clipboard", "dialog.alert", "auth.bootstrap",
-                "info", "run.gui", "debugger", "dialog.question", "dialog.error"
+                "info", "run.gui", "debugger", "dialog.question", "dialog.error",
+                "dialog.filesave"
             ],
             setup    : expect.html.mocked
         },
@@ -227,7 +231,7 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
             describe("build()", function(){
                 this.timeout(10000);
                 
-                it('should build a file with a builder', function(done) {
+                it.only('should build a file with a builder', function(done) {
                     var foundPid, count = 0;
                     
                     build.getBuilder("coffee", false, function(err, builder){
