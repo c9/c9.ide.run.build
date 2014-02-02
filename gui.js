@@ -105,7 +105,7 @@ define(function(require, module, exports) {
                     if (e.value == "new-build-system") {
                         tabs.open({
                             path   : settings.get("project/build/@path") 
-                              + "/New Build System",
+                              + "/New Builder.build",
                             active : true,
                             value  : '// Create a custom Cloud9 build system - similar to the Sublime build system\n'
                               + '// For more information see http://docs.c9.io:8080/#!/api/run-method-run\n'

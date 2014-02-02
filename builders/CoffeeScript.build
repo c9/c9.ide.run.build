@@ -1,5 +1,4 @@
 {
-    "caption" : "Coffee",
     "cmd": ["coffee", "-c", "$file"],
     "selector": "source.coffee"
 }

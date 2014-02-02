@@ -147,7 +147,8 @@ define(function(require, module, exports) {
                     try{ builder = JSON.parse(data); }
                     catch(e){ return callback(e); }
                     
-                    builders[name] = builder;
+                    builder.caption = name.replace(/\.build$/, "");
+                    builders[builder.caption] = builder;
                     callback(null, builder);
                 })
             }

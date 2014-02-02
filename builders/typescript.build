@@ -1,5 +1,4 @@
 {
-    "caption" : "Typescript",
     "cmd": ["tsc", "--out", "${file/\\.ts/\\.js/}", "$file"],
     "selector": "source.ts"
 }

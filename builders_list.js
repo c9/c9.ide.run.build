@@ -4,7 +4,9 @@ var builders = {};
 var buildersPath = __dirname + "/builders/";
 Fs.readdirSync(buildersPath).forEach(function (name) {
     var json = JSON.parse(Fs.readFileSync(buildersPath + name));
-    builders[json.caption || name] = json;
+    json.caption = name.replace(/\.build/, "");
+    json.$builtin = true;
+    builders[json.caption] = json;
 });
 
 module.exports = builders;

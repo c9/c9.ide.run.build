@@ -1,5 +1,4 @@
 {
-    "caption" : "SASS (scss)",
     "cmd": ["scss", "--update", "$file"],
     "env": {
         "GEM_HOME": "$home/lib/ruby/gems",
