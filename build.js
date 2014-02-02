@@ -1,5 +1,5 @@
 define(function(require, module, exports) {
-    main.consumes = ["Plugin", "settings", "fs", "c9", "preferences", "run"];
+    main.consumes = ["Plugin", "settings", "fs", "c9", "preferences", "run", "util"];
     main.provides = ["build"];
     return main;
 
@@ -10,13 +10,14 @@ define(function(require, module, exports) {
         var run         = imports.run;
         var fs          = imports.fs;
         var c9          = imports.c9;
+        var util        = imports.util;
         
         /***** Initialization *****/
         
         var plugin  = new Plugin("Ajax.org", main.consumes);
         var emit    = plugin.getEmitter();
         
-        var builders    = options.builders;
+        var builders    = util.cloneObject(options.builders);
         var processes   = [];
         var base        = options.base;
         var builderPath = options.builderPath || "/.c9/builders"
@@ -92,8 +93,10 @@ define(function(require, module, exports) {
 //                    return callback(err);
                 
                 if (files) {
-                    files.forEach(function(file){
-                        builders.push(file.name);
+                    files.forEach(function(file) {
+                        var basename = file.name.replace(/\.build$/, "");
+                        if (builders.indexOf(basename) < 0 && file.name !== basename)
+                            builders.push(basename);
                     });
                 }
                 
@@ -132,26 +135,34 @@ define(function(require, module, exports) {
         }
         
         function getBuilder(name, refresh, callback){
-            if (builders[name] && !refresh)
-                callback(null, builders[name]);
-            else {
-                fs.readFile(settings.get("project/build/@path") 
-                  + "/" + name, "utf8", function(err, data){
-                    if (err)
-                        return callback(err);
-                    
-                    // Remove comments
-                    data = data.replace(/\/\/.*/g, "");
-                    
-                    var builder;
-                    try{ builder = JSON.parse(data); }
-                    catch(e){ return callback(e); }
-                    
-                    builder.caption = name.replace(/\.build$/, "");
-                    builders[builder.caption] = builder;
-                    callback(null, builder);
-                })
-            }
+            var path = settings.get("project/build/@path") + "/" + name + ".build";
+            fs.exists(path, function(exists) {
+                if (!exists) {
+                    if (options.builders[name])
+                        return callback(null, options.builders[name]);
+                    callback("Builder does not exist");
+                }
+                else if (builders[name] && !refresh && (!exists || options.builders[name] === builders[name])) {
+                    callback(null, builders[name]);
+                }
+                else {
+                    fs.readFile(path, "utf8", function(err, data){
+                        if (err)
+                            return callback(err);
+                        
+                        // Remove comments
+                        data = data.replace(/\/\/.*/g, "");
+                        
+                        var builder;
+                        try{ builder = JSON.parse(data); }
+                        catch(e){ return callback(e); }
+                        
+                        builder.caption = name.replace(/\.build$/, "");
+                        builders[builder.caption] = builder;
+                        callback(null, builder);
+                    })
+                }
+            });
         }
         
         function build(builder, options, name, callback){
