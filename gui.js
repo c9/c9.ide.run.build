@@ -110,7 +110,6 @@ define(function(require, module, exports) {
                             value  : '// Create a custom Cloud9 build system - similar to the Sublime build system\n'
                               + '// For more information see http://docs.c9.io:8080/#!/api/run-method-run\n'
                               + '{\n'
-                              + '    "caption" : "",\n'
                               + '    "cmd" : ["ls", "$file", "$args"],\n'
                               + '    "info" : "Building $project_path/$file",\n'
                               + '    "selector": "source.ext"\n'
