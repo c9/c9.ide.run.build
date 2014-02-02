@@ -94,9 +94,11 @@ define(function(require, module, exports) {
                 
                 if (files) {
                     files.forEach(function(file) {
-                        var basename = file.name.replace(/\.build$/, "");
-                        if (builders.indexOf(basename) < 0 && file.name !== basename)
-                            builders.push(basename);
+                        var name = file.name.match(/(.*)\.build$/);
+                        if (!name)
+                            return console.warn("Builder ignored, doesn't have .build extension: " + file.name)
+                        if (builders.indexOf(name[1]) < 0)
+                            builders.push(name[1]);
                     });
                 }
                 
