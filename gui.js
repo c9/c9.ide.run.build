@@ -145,12 +145,12 @@ define(function(require, module, exports) {
                 }
             }), c += 100, plugin);
             menus.addItemByPath("Run/Automatically Build Supported Files", new ui.item({
-                type  : "check",
-                value : "[{settings.model}::user/build/@autobuild]"
+                type    : "check",
+                checked : "user/build/@autobuild"
             }), c += 100, plugin);
             menus.addItemByPath("Run/Save All on Build", new ui.item({
-                type  : "check",
-                value : "[{settings.model}::project/build/@saveall]"
+                type    : "check",
+                checked : "project/build/@saveall"
             }), c += 100, plugin);
             
             c = 0;

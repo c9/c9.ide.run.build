@@ -25,7 +25,7 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
         "plugins/c9.ide.ui/anims",
         {
             packagePath : "plugins/c9.core/settings",
-            settings : "<settings><state><console>" + JSON.stringify({
+            settings : { state: { console: {
                 type  : "pane", 
                 nodes : [
                     {
@@ -40,7 +40,7 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
                         }
                     }
                 ]
-            }) + "</console></state></settings>"
+            } } }
         },
         "plugins/c9.core/api.js",
         {
@@ -63,7 +63,10 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
         "plugins/c9.ide.console/console",
         "plugins/c9.fs/proc",
         "plugins/c9.fs/fs",
-        "plugins/c9.vfs.client/vfs_client",
+        {
+            packagePath: "plugins/c9.vfs.client/vfs_client",
+            debug: true
+        },
         "plugins/c9.vfs.client/endpoint",
         "plugins/c9.ide.auth/auth",
         {
@@ -139,7 +142,8 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
             provides : [
                 "commands", "menus", "layout", "watcher", "save", 
                 "preferences", "clipboard", "dialog.alert", "auth.bootstrap",
-                "info", "run.gui", "debugger", "dialog.question", "dialog.error"
+                "info", "run.gui", "debugger", "dialog.question", "dialog.error",
+                "dialog.filesave"
             ],
             setup    : expect.html.mocked
         },
