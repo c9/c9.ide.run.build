@@ -88,21 +88,25 @@ define(function(require, module, exports) {
         
         function listBuilders(callback){
             var builders = Object.keys(options.builders || {});
-            fs.readdir(settings.get("project/build/@path"), function(err, files){
-//                if (err && err.code == "ENOENT")
-//                    return callback(err);
-                
-                if (files) {
-                    files.forEach(function(file) {
-                        var name = file.name.match(/(.*)\.build$/);
-                        if (!name)
-                            return console.warn("Builder ignored, doesn't have .build extension: " + file.name)
-                        if (builders.indexOf(name[1]) < 0)
-                            builders.push(name[1]);
-                    });
-                }
-                
-                callback(null, builders);
+            fs.exists(settings.get("project/build/@path"), function(exists) {
+                if (!exists)
+                    return callback(null, builders);
+                fs.readdir(settings.get("project/build/@path"), function(err, files) {
+                    // if (err && err.code == "ENOENT")
+                    //     return callback(err);
+                    
+                    if (files) {
+                        files.forEach(function(file) {
+                            var name = file.name.match(/(.*)\.build$/);
+                            if (!name)
+                                return console.warn("Builder ignored, doesn't have .build extension: " + file.name);
+                            if (builders.indexOf(name[1]) < 0)
+                                builders.push(name[1]);
+                        });
+                    }
+                    
+                    callback(null, builders);
+                });
             });
         }
         
