@@ -65,7 +65,7 @@ define(function(require, module, exports) {
                     ["builder", "auto"]
                 ]);
                 settings.setDefaults("user/build", [
-                    ["autobuild", "true"]
+                    ["autobuild", "false"]
                 ]);
                 
                 var name = settings.get("project/build/@builder");
