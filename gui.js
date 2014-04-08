@@ -112,7 +112,7 @@ define(function(require, module, exports) {
                               + '{\n'
                               + '    "cmd" : ["ls", "$file", "$args"],\n'
                               + '    "env" : {},\n'
-                              + '    "info" : "Building $project_path/$file",\n'
+                              + '    "info" : "Building $project_path/$file_name",\n'
                               + '    "selector": "source.ext"\n'
                               + '}',
                             document : {
