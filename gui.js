@@ -235,7 +235,7 @@ define(function(require, module, exports) {
             
             function done(){
                 process = build.build(currentBuilder, 
-                    { path: path }, "build", function(err, pid){
+                    { path: path.substr(1) }, "build", function(err, pid){
                         if (err && err.code != "EBUILDERNOTFOUND")
                             return showError(err);
                     });
