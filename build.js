@@ -4,22 +4,22 @@ define(function(require, module, exports) {
     return main;
 
     function main(options, imports, register) {
-        var Plugin      = imports.Plugin;
-        var settings    = imports.settings;
-        var prefs       = imports.preferences;
-        var run         = imports.run;
-        var fs          = imports.fs;
-        var c9          = imports.c9;
-        var util        = imports.util;
+        var Plugin = imports.Plugin;
+        var settings = imports.settings;
+        var prefs = imports.preferences;
+        var run = imports.run;
+        var fs = imports.fs;
+        var c9 = imports.c9;
+        var util = imports.util;
         
         /***** Initialization *****/
         
-        var plugin  = new Plugin("Ajax.org", main.consumes);
-        var emit    = plugin.getEmitter();
+        var plugin = new Plugin("Ajax.org", main.consumes);
+        var emit = plugin.getEmitter();
         
-        var builders    = util.cloneObject(options.builders);
-        var processes   = [];
-        var base        = options.base;
+        var builders = util.cloneObject(options.builders);
+        var processes = [];
+        var base = options.base;
         var builderPath = options.builderPath || "/.c9/builders"
         
         var loaded = false;
@@ -28,17 +28,17 @@ define(function(require, module, exports) {
             loaded = true;
             
             // Settings
-            settings.on("read", function(e){
+            settings.on("read", function(e) {
                 // Defaults
                 settings.setDefaults("project/build", [
                     ["path", builderPath]
                 ]);
                 
                 // @todo Could consider adding a watcher to ~/.c9/runners
-                listBuilders(function(err, files){
-                    files.forEach(function(file){
+                listBuilders(function(err, files) {
+                    files.forEach(function(file) {
                         if (!builders[file]) {
-                            getBuilder(file, false, function(err, builder){
+                            getBuilder(file, false, function(err, builder) {
                                 if (!err)
                                     builders[file] = builder;
                             });
@@ -47,7 +47,7 @@ define(function(require, module, exports) {
                 });
             }, plugin);
             
-            settings.on("write", function(e){
+            settings.on("write", function(e) {
                 
             }, plugin);
             
@@ -55,11 +55,11 @@ define(function(require, module, exports) {
             prefs.add({
                 "Project" : {
                     "Build" : {
-                        position : 400,
+                        position: 400,
                         "Builder Path in Workspace" : {
-                           type     : "textbox",
-                           path     : "project/build/@path",
-                           position : 1000
+                           type: "textbox",
+                           path: "project/build/@path",
+                           position: 1000
                         }
                     }
                 }
@@ -68,25 +68,25 @@ define(function(require, module, exports) {
             prefs.add({
                 "Run" : {
                     "Build" : {
-                        position : 400,
+                        position: 400,
                         "Automatically Build Supported Files" : {
-                           type     : "checkbox",
-                           path     : "user/build/@autobuild",
-                           position : 100
+                           type: "checkbox",
+                           path: "user/build/@autobuild",
+                           position: 100
                         }
                     }
                 }
             }, plugin);
 
             // Check after state.change
-            c9.on("stateChange", function(e){
+            c9.on("stateChange", function(e) {
                 
             }, plugin);
         }
         
         /***** Methods *****/
         
-        function listBuilders(callback){
+        function listBuilders(callback) {
             var builders = Object.keys(options.builders || {});
             fs.exists(settings.get("project/build/@path"), function(exists) {
                 if (!exists)
@@ -110,12 +110,12 @@ define(function(require, module, exports) {
             });
         }
         
-        function detectBuilder(options, callback){
-            listBuilders(function(err, names){
+        function detectBuilder(options, callback) {
+            listBuilders(function(err, names) {
                 if (err) return callback(err);
                 
                 var count = 0;
-                names.forEach(function(name){
+                names.forEach(function(name) {
                     if (!builders[name]) {
                         count++;
                         getBuilder(name, false, function(){
@@ -140,7 +140,7 @@ define(function(require, module, exports) {
             }
         }
         
-        function getBuilder(name, refresh, callback){
+        function getBuilder(name, refresh, callback) {
             var path = settings.get("project/build/@path") + "/" + name + ".build";
             fs.exists(path, function(exists) {
                 if (!exists) {
@@ -152,7 +152,7 @@ define(function(require, module, exports) {
                     callback(null, builders[name]);
                 }
                 else {
-                    fs.readFile(path, "utf8", function(err, data){
+                    fs.readFile(path, "utf8", function(err, data) {
                         if (err)
                             return callback(err);
                         
@@ -161,7 +161,7 @@ define(function(require, module, exports) {
                         
                         var builder;
                         try{ builder = JSON.parse(data); }
-                        catch(e){ return callback(e); }
+                        catch (e){ return callback(e); }
                         
                         builder.caption = name.replace(/\.build$/, "");
                         builders[builder.caption] = builder;
@@ -171,11 +171,11 @@ define(function(require, module, exports) {
             });
         }
         
-        function build(builder, options, name, callback){
+        function build(builder, options, name, callback) {
             options.builder = true;
             
             if (builder == "auto") { 
-                return detectBuilder(options, function(err, detected){
+                return detectBuilder(options, function(err, detected) {
                     if (err) return callback(err);
                     
                     build(detected, options, name, callback);
@@ -225,12 +225,12 @@ define(function(require, module, exports) {
          * 
          * Example:
          * 
-         *     build.getBuilder("coffee", false, function(err, builder){
+         *     build.getBuilder("coffee", false, function(err, builder) {
          *         if (err) throw err.message;
          *         
          *         var process = build.build(builder, {
          *             path: "/helloworld.coffee"
-         *         }, function(err, pid){
+         *         }, function(err, pid) {
          *             if (err) throw err.message;
          * 
          *             console.log("The PID is ", pid);
@@ -242,7 +242,7 @@ define(function(require, module, exports) {
          * 
          *     var process = build.build("auto", {
          *         path: "/helloworld.coffee"
-         *     }, function(err, pid){
+         *     }, function(err, pid) {
          *         if (err) throw err.message;
          *     
          *         console.log("The PID is ", pid);
@@ -305,25 +305,25 @@ define(function(require, module, exports) {
              * the `running` property.
              * @property {-1} STOPPING
              */
-            STOPPING : run.STOPPING,
+            STOPPING: run.STOPPING,
             /**
              * Indicates the process is not running. To be tested against 
              * the `running` property.
              * @property {0}  STOPPED 
              */
-            STOPPED  : run.STOPPED,
+            STOPPED: run.STOPPED,
             /**
              * Indicates the process is getting started. To be tested against 
              * the `running` property.
              * @property {1}  STARTING
              */
-            STARTING : run.STARTING,
+            STARTING: run.STARTING,
             /**
              * Indicates the process is running. To be tested against 
              * the `running` property.
              * @property {2}  STARTED 
              */
-            STARTED  : run.STARTED,
+            STARTED: run.STARTED,
             
             /**
              * @property {run.Process[]}  processes  List of running processes
@@ -338,7 +338,7 @@ define(function(require, module, exports) {
              */
             get base(){ return base; },
             
-            _events : [
+            _events: [
                 /**
                  * Fires when the process is going to be killed
                  * @event stopping
@@ -381,7 +381,7 @@ define(function(require, module, exports) {
              * @param {Error}    callback.err       The error object if an error occurred.
              * @param {String[]} callback.builders  A list of names of builders.
              */
-            listBuilders : listBuilders,
+            listBuilders: listBuilders,
             
             /**
              * Retrieves an individual builder's JSON object based on it's name.
@@ -390,7 +390,7 @@ define(function(require, module, exports) {
              * @param {Function} callback.err     The error object if an error occurred.
              * @param {Function} callback.runner  A builder object. See {@link run#run} for more information.
              */
-            getBuilder : getBuilder,
+            getBuilder: getBuilder,
             
             /**
              * Builds a file. See `run.run()` for the full documentation
@@ -404,11 +404,11 @@ define(function(require, module, exports) {
              * @param {Error}         callback.err        The error object if an error occurred.
              * @returns {run.Process} the process object
              */
-            build : build
+            build: build
         });
         
         register(null, {
-            build : plugin
+            build: plugin
         });
     }
 });
