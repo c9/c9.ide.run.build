@@ -1,4 +1,4 @@
-/*global describe it before after = */
+/*global describe it before after bar */
 
 "use client";
 
@@ -26,21 +26,23 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
         {
             packagePath: "plugins/c9.core/settings",
             settings: { state: { console: {
-                type: "pane", 
-                nodes: [
-                    {
-                        type: "tab",
-                        editorType: "output",
-                        active: "true",
-                        document: {
-                            title: "Build",
-                            output: {
-                                id: "build"
+                "json()": {
+                    type: "pane", 
+                    nodes: [
+                        {
+                            type: "tab",
+                            editorType: "output",
+                            active: "true",
+                            document: {
+                                title: "Build",
+                                output: {
+                                    id: "build"
+                                }
                             }
                         }
-                    }
-                ]
-            } } }
+                    ]
+                } } }
+            }
         },
         "plugins/c9.core/api.js",
         {
@@ -58,7 +60,10 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
         "plugins/c9.ide.ui/focus",
         "plugins/c9.ide.editors/pane",
         "plugins/c9.ide.editors/tab",
-        "plugins/c9.ide.terminal/terminal",
+        {
+            packagePath: "plugins/c9.ide.terminal/terminal",
+            installPath: "~/.c9"
+        },
         "plugins/c9.ide.run/output",
         "plugins/c9.ide.console/console",
         "plugins/c9.fs/proc",
@@ -178,13 +183,14 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
         var maxTries = 15, retries = 0;
         function waitForOutput(match, callback) {
             setTimeout(function(){
-                if (retries < maxTries && !getHtmlElement(tabs.focussedTab).textContent.match(match)) {
+                var value = tabs.focussedTab.editor.ace.session.getValue();
+                
+                if (retries < maxTries && !value.match(match)) {
                     retries++;
                     return waitForOutput(match, callback);
                 }
-                    
-                expect.html(tabs.focussedTab, "Output Mismatch")
-                    .text(match);
+                
+                expect(value, "Output Mismatch").match(match)
                 
                 callback();
             }, 500);
@@ -201,6 +207,8 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
                 bar.$ext.style.right = "20px";
                 bar.$ext.style.bottom = "20px";
                 bar.$ext.style.height = "150px";
+                
+                document.querySelector(".console").style.height = "100%";
       
                 document.body.style.marginBottom = "150px";
                 done();
@@ -248,7 +256,7 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
                                 if (err) throw err.message;
                                 
                                 var process = build.build(builder, {
-                                    path: "/helloworld.coffee"
+                                    path: "helloworld.coffee"
                                 }, "build", function(err, pid) {
                                     if (err) throw err.message;
     
@@ -307,8 +315,8 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
                                     if (err) throw err.message;
                                     
                                     var process = run.run([builder, runner], [
-                                        { path: "/helloworld.coffee" }, 
-                                        { path: "/helloworld.js" }
+                                        { path: "helloworld.coffee" }, 
+                                        { path: "helloworld.js" }
                                     ], "build",
                                     function(err, pid) {
                                         if (err) throw err.message;
