@@ -97,9 +97,7 @@ define(function(require, module, exports) {
                     
                     if (files) {
                         files.forEach(function(file) {
-                            var name = file.name.match(/(.*)\.build$/);
-                            if (!name)
-                                return console.warn("Builder ignored, doesn't have .build extension: " + file.name);
+                            var name = file.name.match(/(.*)\.build$/) || [0, file.name];
                             if (builders.indexOf(name[1]) < 0)
                                 builders.push(name[1]);
                         });
@@ -142,10 +140,14 @@ define(function(require, module, exports) {
         
         function getBuilder(name, refresh, callback) {
             var path = settings.get("project/build/@path") + "/" + name + ".build";
-            fs.exists(path, function(exists) {
+            fs.exists(path, function test(exists) {
                 if (!exists) {
                     if (options.builders[name])
                         return callback(null, options.builders[name]);
+                    if (/\.build$/.test(path)) {
+                        path = settings.get("project/build/@path") + "/"  + name;
+                        return fs.exists(path, test);
+                    }
                     callback("Builder does not exist");
                 }
                 else if (builders[name] && !refresh && (!exists || options.builders[name] === builders[name])) {
