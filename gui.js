@@ -108,7 +108,7 @@ define(function(require, module, exports) {
                               + "/My Builder.build",
                             active: true,
                             value: '// Create a custom Cloud9 build system - similar to the Sublime build system\n'
-                              + '// For more information see http://docs.c9.io:8080/#!/api/run-method-run\n'
+                              + '// For more information see https://docs.c9.io/custom_runners.html\n'
                               + '{\n'
                               + '    "cmd" : ["ls", "$file", "$args"],\n'
                               + '    "env" : {},\n'
