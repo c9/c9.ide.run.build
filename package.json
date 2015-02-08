@@ -9,15 +9,13 @@
         "url": "http://github.com/c9/c9.ide.run.build.git"
     },
     "plugins": {
-        "plugin": {
-            "build": {},
-            "gui": {}
-        }
+        "build": {},
+        "gui": {}
     },
     "categories": [
         "core"
     ],
     "licenses": [
-        ""
+        "MIT"
     ]
 }
