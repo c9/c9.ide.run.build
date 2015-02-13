@@ -148,7 +148,7 @@ require(["lib/architect/architect", "lib/chai/chai", "/vfs-root"],
                 "commands", "menus", "layout", "watcher", "save", 
                 "preferences", "clipboard", "dialog.alert", "auth.bootstrap",
                 "info", "run.gui", "debugger", "dialog.question", "dialog.error",
-                "dialog.filesave"
+                "dialog.file"
             ],
             setup: expect.html.mocked
         },
