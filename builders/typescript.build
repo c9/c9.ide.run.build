@@ -1,4 +1,4 @@
 {
-    "cmd": ["tsc", "--out", "$file"],
+    "cmd": ["tsc", "$file"],
     "selector": "source.ts"
 }
