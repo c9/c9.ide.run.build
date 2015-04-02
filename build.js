@@ -86,11 +86,16 @@ define(function(require, module, exports) {
         
         /***** Methods *****/
         
+        function addBuilder(name, builder, plugin) {
+            builders[name] = builder;
+            plugin.addOther(function(){ delete builders[name]; });
+        }
+        
         function listBuilders(callback) {
-            var builders = Object.keys(options.builders || {});
+            var _builders = Object.keys(builders || {});
             fs.exists(settings.get("project/build/@path"), function(exists) {
                 if (!exists)
-                    return callback(null, builders);
+                    return callback(null, _builders);
                 fs.readdir(settings.get("project/build/@path"), function(err, files) {
                     // if (err && err.code == "ENOENT")
                     //     return callback(err);
@@ -103,12 +108,12 @@ define(function(require, module, exports) {
                                     return console.warn("Builder ignored, doesn't have .build extension: " + file.name);
                                 name = [0, file.name];
                             }
-                            if (builders.indexOf(name[1]) < 0)
-                                builders.push(name[1]);
+                            if (_builders.indexOf(name[1]) < 0)
+                                _builders.push(name[1]);
                         });
                     }
                     
-                    callback(null, builders);
+                    callback(null, _builders);
                 });
             });
         }
@@ -398,6 +403,13 @@ define(function(require, module, exports) {
              * @param {Function} callback.runner  A builder object. See {@link run#run} for more information.
              */
             getBuilder: getBuilder,
+            
+            /**
+             * Adds a new builder to the list of builders
+             * @param {String} name       The name of the builder to add
+             * @param {Object} builder    The builder to add
+             */
+            addBuilder: addBuilder,
             
             /**
              * Builds a file. See `run.run()` for the full documentation
