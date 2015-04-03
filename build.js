@@ -168,12 +168,8 @@ define(function(require, module, exports) {
                         if (err)
                             return callback(err);
                         
-                        // Remove comments
-                        data = data.replace(/(^|\n)\s*\/\/.*/g, "");
-                        
-                        var builder;
-                        try{ builder = JSON.parse(data); }
-                        catch (e){ return callback(e); }
+                        var builder = util.safeParseJson(data, callback);    
+                        if (!builder) return;
                         
                         builder.caption = name.replace(/\.build$/, "");
                         builders[builder.caption] = builder;
