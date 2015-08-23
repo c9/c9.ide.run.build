@@ -67,6 +67,7 @@ define(function(require, module, exports) {
             
             prefs.add({
                 "Run" : {
+                    position: 600,
                     "Build" : {
                         position: 400,
                         "Automatically Build Supported Files" : {
