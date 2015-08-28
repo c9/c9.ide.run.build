@@ -132,19 +132,20 @@ define(function(require, module, exports) {
                 }
             });
             
-            menus.addItemByPath("Run/Build System/", mnuBuildSystem, 
-                c += 100, plugin);
             menus.addItemByPath("Run/Build", new ui.item({
                 command: "build"
             }), c += 100, plugin);
             menus.addItemByPath("Run/Cancel Build", new ui.item({
                 command: "stopbuild"
             }), c += 100, plugin);
+            menus.addItemByPath("Run/Build System/", mnuBuildSystem, 
+                c += 100, plugin);
             menus.addItemByPath("Run/Show Build Result", new ui.item({
                 onclick: function(){
                     commands.exec("showoutput", null, { id: "build" });
                 }
             }), c += 100, plugin);
+            menus.addItemByPath("Run/~", new ui.divider(), c += 100, plugin);
             menus.addItemByPath("Run/Automatically Build Supported Files", new ui.item({
                 type: "check",
                 checked: "user/build/@autobuild"
