@@ -90,7 +90,7 @@ define(function(require, module, exports) {
                                 nodes[0].select();
                             
                             var c = 300;
-                            names.sort().forEach(function(name) {
+                            names.forEach(function(name) {
                                 menus.addItemToMenu(mnuBuildSystem, new ui.item({
                                     type: "radio",
                                     caption: uCaseFirst(name),
