@@ -20,10 +20,10 @@ define(function(require, module, exports) {
         var builders = util.cloneObject(options.builders);
         var processes = [];
         var base = options.base;
-        var builderPath = options.builderPath || "/.c9/builders"
+        var builderPath = options.builderPath || "/.c9/builders";
         
         var loaded = false;
-        function load(){
+        function load() {
             if (loaded) return false;
             loaded = true;
             
@@ -53,10 +53,10 @@ define(function(require, module, exports) {
             
             // Preferences
             prefs.add({
-                "Project" : {
-                    "Build" : {
+                "Project": {
+                    "Build": {
                         position: 400,
-                        "Builder Path in Workspace" : {
+                        "Builder Path in Workspace": {
                            type: "textbox",
                            path: "project/build/@path",
                            position: 1000
@@ -66,11 +66,11 @@ define(function(require, module, exports) {
             }, plugin);
             
             prefs.add({
-                "Run" : {
+                "Run": {
                     position: 600,
-                    "Build" : {
+                    "Build": {
                         position: 400,
-                        "Automatically Build Supported Files" : {
+                        "Automatically Build Supported Files": {
                            type: "checkbox",
                            path: "user/build/@autobuild",
                            position: 100
@@ -89,7 +89,7 @@ define(function(require, module, exports) {
         
         function addBuilder(name, builder, plugin) {
             builders[name] = builder;
-            plugin.addOther(function(){ delete builders[name]; });
+            plugin.addOther(function() { delete builders[name]; });
         }
         
         function listBuilders(callback) {
@@ -127,16 +127,16 @@ define(function(require, module, exports) {
                 names.forEach(function(name) {
                     if (!builders[name]) {
                         count++;
-                        getBuilder(name, false, function(){
+                        getBuilder(name, false, function() {
                             if (--count === 0)
                                 done();
                         });
                     }
-                })
+                });
                 if (count === 0) done();
             });
             
-            function done(){
+            function done() {
                 for (var name in builders) {
                     var builder = builders[name];
                     if (run.matchSelector(builder.selector, options.path))
@@ -156,7 +156,7 @@ define(function(require, module, exports) {
                     if (options.builders[name])
                         return callback(null, options.builders[name]);
                     if (/\.build$/.test(path)) {
-                        path = settings.get("project/build/@path") + "/"  + name;
+                        path = settings.get("project/build/@path") + "/" + name;
                         return fs.exists(path, test);
                     }
                     callback("Builder does not exist");
@@ -175,7 +175,7 @@ define(function(require, module, exports) {
                         builder.caption = name.replace(/\.build$/, "");
                         builders[builder.caption] = builder;
                         callback(null, builder);
-                    })
+                    });
                 }
             });
         }
@@ -196,10 +196,10 @@ define(function(require, module, exports) {
             
             var event = { process: proc };
             
-            proc.on("starting", function(){ emit("starting", event); })
-            proc.on("started", function(){ emit("started", event); })
-            proc.on("stopping", function(){ emit("stopping", event); })
-            proc.on("stopped", function(){ 
+            proc.on("starting", function() { emit("starting", event); });
+            proc.on("started", function() { emit("started", event); });
+            proc.on("stopping", function() { emit("stopping", event); });
+            proc.on("stopped", function() { 
                 emit("stopped", event); 
                 processes.remove(proc);
             });
@@ -209,16 +209,16 @@ define(function(require, module, exports) {
         
         /***** Lifecycle *****/
         
-        plugin.on("load", function(){
+        plugin.on("load", function() {
             load();
         });
-        plugin.on("enable", function(){
+        plugin.on("enable", function() {
             
         });
-        plugin.on("disable", function(){
+        plugin.on("disable", function() {
             
         });
-        plugin.on("unload", function(){
+        plugin.on("unload", function() {
             loaded = false;
         });
         
@@ -337,15 +337,15 @@ define(function(require, module, exports) {
             /**
              * @property {run.Process[]}  processes  List of running processes
              */
-            get processes(){ return processes; },
+            get processes() { return processes; },
             /**
              * @property {Object[]}  builders  List of available builders
              */
-            get builders(){ return builders; },
+            get builders() { return builders; },
             /**
              * @ignore
              */
-            get base(){ return base; },
+            get base() { return base; },
             
             _events: [
                 /**

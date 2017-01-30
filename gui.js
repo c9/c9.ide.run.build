@@ -27,7 +27,7 @@ define(function(require, module, exports) {
         var process, currentBuilder;
         
         var loaded = false;
-        function load(){
+        function load() {
             if (loaded) return false;
             loaded = true;
             
@@ -37,10 +37,10 @@ define(function(require, module, exports) {
                 group: "Run & Debug",
                 hint: "builds the current file (focussed document)",
                 bindKey: { mac: "Command-B", win: "Ctrl-B" },
-                isAvailable: function(){
+                isAvailable: function() {
                     return getFocusTab() ? true : false;
                 },
-                exec: function(){
+                exec: function() {
                     buildFocusTab();
                 }
             }, plugin);
@@ -50,16 +50,16 @@ define(function(require, module, exports) {
                 group: "Run & Debug",
                 hint: "stop a running build",
                 bindKey: { mac: "Ctrl-Shift-C", win: "Ctrl-Shift-C" },
-                isAvailable: function(){
+                isAvailable: function() {
                     return process && process.running;
                 },
-                exec: function(){ 
+                exec: function() { 
                     process && process.stop();
                 }
             }, plugin);
     
             // Settings
-            settings.on("read", function(){
+            settings.on("read", function() {
                 settings.setDefaults("project/build", [
                     ["saveall", "true"],
                     ["builder", "auto"]
@@ -69,7 +69,7 @@ define(function(require, module, exports) {
                 ]);
                 
                 var name = settings.get("project/build/@builder");
-                setCurrentBuilder(name, function(){});
+                setCurrentBuilder(name, function() {});
             });
             
             // Menus
@@ -123,11 +123,11 @@ define(function(require, module, exports) {
                                     customSyntax: "javascript"
                                 }
                             }
-                        }, function(){});
+                        }, function() {});
                         return;
                     }
                     
-                    setCurrentBuilder(e.value, function(){});
+                    setCurrentBuilder(e.value, function() {});
                     settings.set("project/build/@builder", e.value);
                 }
             });
@@ -141,7 +141,7 @@ define(function(require, module, exports) {
             menus.addItemByPath("Run/Build System/", mnuBuildSystem, 
                 c += 100, plugin);
             menus.addItemByPath("Run/Show Build Result", new ui.item({
-                onclick: function(){
+                onclick: function() {
                     commands.exec("showoutput", null, { id: "build" });
                 }
             }), c += 100, plugin);
@@ -186,7 +186,7 @@ define(function(require, module, exports) {
                 
                 buildFocusTab(true, e.path);
             });
-        };
+        }
         
         /***** Methods *****/
         
@@ -203,7 +203,7 @@ define(function(require, module, exports) {
             }
         }
         
-        function getFocusTab(){
+        function getFocusTab() {
             var tab = tabs.focussedTab;
             if (!tab) return false;
             if (tab.path) return tab;
@@ -234,7 +234,7 @@ define(function(require, module, exports) {
             else
                 done();
             
-            function done(){
+            function done() {
                 process = build.build(currentBuilder, 
                     { path: path.substr(1) }, "build", function(err, pid) {
                         if (err && err.code != "EBUILDERNOTFOUND")
@@ -245,16 +245,16 @@ define(function(require, module, exports) {
         
         /***** Lifecycle *****/
         
-        plugin.on("load", function(){
+        plugin.on("load", function() {
             load();
         });
-        plugin.on("enable", function(){
+        plugin.on("enable", function() {
             
         });
-        plugin.on("disable", function(){
+        plugin.on("disable", function() {
             
         });
-        plugin.on("unload", function(){
+        plugin.on("unload", function() {
             loaded = false;
         });
         
